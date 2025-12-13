@@ -50,7 +50,6 @@ class Network(object):
         Return the predicted digit for a single input x.
         """
         output = self.feedforward(x)
-        print(output)
         return int(np.argmax(output))
 
 

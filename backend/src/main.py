@@ -30,7 +30,8 @@ def predict(req: PredictRequest):
 
     if x.shape[0] != 784:
         return {"error": "Expected 784 inputs"}
-
+    
+    x = x.reshape((784, 1))    
     digit = net.predict(x)
     return {"digit": digit}
 
