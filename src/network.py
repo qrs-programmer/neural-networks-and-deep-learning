@@ -53,6 +53,7 @@ class Network(object):
         network will be evaluated against the test data after each
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
+        epoch_times = []
         if test_data: n_test = len(test_data)
         n = len(training_data)
         for j in range(epochs):
@@ -69,6 +70,9 @@ class Network(object):
                     j, self.evaluate(test_data), n_test, time2-time1))
             else:
                 print("Epoch {0} complete in {1:.2f} seconds".format(j, time2-time1))
+            epoch_times.append(time2-time1)
+        return epoch_times
+
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
