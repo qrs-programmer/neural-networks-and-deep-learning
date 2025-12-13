@@ -44,6 +44,14 @@ class Network(object):
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a)+b)
         return a
+    
+    def predict(self, x):
+        """
+        Return the predicted digit for a single input x.
+        """
+        output = self.feedforward(x)
+        return int(np.argmax(output))
+
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
