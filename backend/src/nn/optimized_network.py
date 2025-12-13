@@ -50,6 +50,7 @@ class Network(object):
         Return the predicted digit for a single input x.
         """
         output = self.feedforward(x)
+        print(output)
         return int(np.argmax(output))
 
 
@@ -147,6 +148,20 @@ class Network(object):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
         return (output_activations-y)
+    
+    def save(self, filename):
+        np.savez(
+            filename,
+            weights=np.array(self.weights, dtype=object),
+            biases=np.array(self.biases, dtype=object)
+        )
+
+
+    def load(self, filename):
+        data = np.load(filename, allow_pickle=True)
+        self.weights = list(data["weights"])
+        self.biases = list(data["biases"])
+
 
 #### Miscellaneous functions
 def sigmoid(z):
@@ -156,3 +171,5 @@ def sigmoid(z):
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z)*(1-sigmoid(z))
+
+

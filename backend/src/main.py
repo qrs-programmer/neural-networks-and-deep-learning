@@ -17,8 +17,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class PredictRequest(BaseModel):
     pixels: list[float]
+
+net = optimized_network.Network([784, 30, 10])
+net.load("models/model.npz")
 
 @app.post("/predict")
 def predict(req: PredictRequest):
@@ -26,10 +30,7 @@ def predict(req: PredictRequest):
 
     if x.shape[0] != 784:
         return {"error": "Expected 784 inputs"}
-    training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 
-    net = optimized_network.Network([784, 30, 10])
-    net.SGD(training_data, 30, 10, 3.3, test_data=test_data)
     digit = net.predict(x)
     return {"digit": digit}
 

@@ -1,15 +1,32 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
-type DigitCanvasProps = {
-  onSubmit?: (pixels: number[]) => void;
-};
-
-export default function DigitCanvas({ onSubmit }: DigitCanvasProps) {
+export default function DigitCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isDrawing = useRef<boolean>(false);
-
+  const [predictedDigit, setPredictedDigit] = useState(-1);
   const CANVAS_SIZE = 280;
   const SCALE_SIZE = 28;
+
+  const handleSubmit = async () => {
+    const pixels = getPixelData();
+
+    try {
+      const response = await fetch("http://localhost:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pixels }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setPredictedDigit(data.digit);
+    } catch (error) {
+      console.error("Error fetching prediction:", error);
+    }
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,7 +35,6 @@ export default function DigitCanvas({ onSubmit }: DigitCanvasProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // White background
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
@@ -109,13 +125,11 @@ export default function DigitCanvas({ onSubmit }: DigitCanvasProps) {
     return pixels;
   };
 
-  const handleSubmit = () => {
-    const pixels = getPixelData();
-    onSubmit?.(pixels);
-  };
-
   return (
     <div>
+      <div>
+        <p>The digit is: {predictedDigit}</p>
+      </div>
       <canvas
         style={{ border: "1px solid #000000" }}
         ref={canvasRef}
