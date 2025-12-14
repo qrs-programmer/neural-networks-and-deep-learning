@@ -24,7 +24,7 @@ Through this project, I am:
 - **Backend / NN:** Python, NumPy  
 - **Frontend:** TypeScript, React (simple drawing interface)  
 
-## Learning Notes / Concepts Explored
+## Concepts Explored
 - Perceptrons and sigmoid neurons
 - Feedforward neural networks and activation functions
 - Gradient descent and stochastic gradient descent 
